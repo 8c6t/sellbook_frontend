@@ -1,7 +1,8 @@
 import React from 'react';
+import MainSearchForm from '../containers/MainSearchForm';
 
 const MainPage = () => {
-  return <div>메인 페이지</div>;
+  return <MainSearchForm />;
 };
 
 export default MainPage;
