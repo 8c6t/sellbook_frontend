@@ -1,5 +1,6 @@
 import React from 'react';
 import qs from 'qs';
+import SearchResult from '../containers/SearchResult';
 
 const SearchPage = ({ match, location }) => {
   const { query } = match.params;
@@ -7,13 +8,7 @@ const SearchPage = ({ match, location }) => {
     ignoreQueryPrefix: true,
   });
 
-  return (
-    <div>
-      <h2>검색 결과 페이지</h2>
-      <h2>{query}</h2>
-      <h2>{page}</h2>
-    </div>
-  );
+  return <SearchResult query={query} page={page} />;
 };
 
 export default SearchPage;
