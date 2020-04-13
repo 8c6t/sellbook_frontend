@@ -7,6 +7,7 @@ import {
   Jumbotron,
   Row,
 } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Wrapper = styled(Row)`
@@ -23,6 +24,7 @@ const QueryInput = styled(FormControl)`
 `;
 
 const MainSearchForm = () => {
+  const history = useHistory();
   const [query, setQuery] = useState('');
 
   const onChangeQuery = useCallback((e) => {
@@ -32,7 +34,7 @@ const MainSearchForm = () => {
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      // TODO 2020.04.12 검색 처리(redux)
+      history.push(`/search/${query}`);
     },
     [query]
   );
