@@ -1,4 +1,10 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+} from 'react';
 import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +14,7 @@ import BookList from '../components/book/BookList';
 import SearchAgain from '../components/search/SearchAgain';
 
 import * as bookActions from '../reducers/book';
+import { SEARCH_BOOK_REQUEST } from '../reducers/book';
 
 const Wrapper = styled.div`
   margin-top: 1.5rem;
@@ -19,7 +26,7 @@ const SelectedAction = styled.div`
   margin-top: 1rem;
 `;
 
-const SearchResult = ({ query: word, page }) => {
+const SearchResult = ({ query: word, page = 0 }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -28,12 +35,40 @@ const SearchResult = ({ query: word, page }) => {
     (state) => state.book
   );
 
+  const currentPage = useMemo(() => {
+    return Math.ceil(bookList.length / 10) - 1;
+  }, [bookList.length]);
+
+  const onScroll = () => {
+    if (
+      window.scrollY + document.documentElement.clientHeight >
+        document.documentElement.scrollHeight - 100 &&
+      Math.ceil(totalCount / 10) > currentPage + 1
+    ) {
+      dispatch({
+        type: SEARCH_BOOK_REQUEST,
+        data: {
+          query,
+          page: currentPage + 1,
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [bookList.length]);
+
   useEffect(() => {
     dispatch({
       type: bookActions.SEARCH_BOOK_REQUEST,
       data: {
         query,
         page,
+        isFirst: true,
       },
     });
   }, [word]);
