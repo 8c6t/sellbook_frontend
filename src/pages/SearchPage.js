@@ -8,7 +8,11 @@ const SearchPage = ({ match, location }) => {
     ignoreQueryPrefix: true,
   });
 
-  return <SearchResult query={query} page={page} />;
+  return (
+    <div>
+      <SearchResult query={query} page={page} />
+    </div>
+  );
 };
 
 export default SearchPage;
