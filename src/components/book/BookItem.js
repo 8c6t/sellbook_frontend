@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button, Image } from 'react-bootstrap';
+import SecondPrice from './SecondPrice';
 
 const Book = styled.tr`
   td {
@@ -48,7 +49,7 @@ const Book = styled.tr`
 `;
 
 const BookItem = ({ book }) => {
-  const { isbn, title, author, publisher, img, price, secondPrices } = book;
+  const { isbn, title, author, publisher, image, price, secondPrices } = book;
   const aladin = secondPrices.find((e) => e.site === 'ALADIN');
   const yes24 = secondPrices.find((e) => e.site === 'YES24');
 
@@ -58,7 +59,11 @@ const BookItem = ({ book }) => {
         <input type="checkbox" />
       </td>
       <td className="img">
-        <Image src={img} rounded thumbnail></Image>
+        <Image
+          src={`data:image/jpg;base64, ${image}`}
+          rounded
+          thumbnail
+        ></Image>
       </td>
       <td className="bookInfo">
         <p className="bookTitle">{title}</p>
@@ -72,16 +77,8 @@ const BookItem = ({ book }) => {
         <p>중</p>
         <p>하</p>
       </td>
-      <td className="secondPrice">
-        <p>{aladin.grade_a}원</p>
-        <p>{aladin.grade_b}원</p>
-        <p>{aladin.grade_c}원</p>
-      </td>
-      <td className="secondPrice">
-        <p>{yes24.grade_a}원</p>
-        <p>{yes24.grade_b}원</p>
-        <p>{yes24.grade_c}원</p>
-      </td>
+      <SecondPrice site={aladin} />
+      <SecondPrice site={yes24} />
       {/* TODO 호출 경로에 따라 다른 컴포넌트 렌더링 */}
       <td className="btnArea">
         <Button variant="success" size="sm">
