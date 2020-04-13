@@ -15,14 +15,17 @@ const reducer = (state = initialState, action) => {
   return produce(state, (draft) => {
     switch (action.type) {
       case SEARCH_BOOK_REQUEST: {
+        if (action.data.isFirst) {
+          draft.isLoading = true;
+          draft.bookList = [];
+        }
         draft.searchErrorReason = '';
-        draft.isLoading = true;
         break;
       }
       case SEARCH_BOOK_SUCCESS: {
-        const { content: bookList, totalElements: totalCount } = action.data;
-        draft.bookList = bookList;
-        draft.totalCount = totalCount;
+        const { content, totalElements } = action.data;
+        draft.bookList = draft.bookList.concat(content);
+        draft.totalCount = totalElements;
         draft.isLoading = false;
         break;
       }

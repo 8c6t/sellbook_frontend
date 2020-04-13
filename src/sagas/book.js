@@ -1,4 +1,4 @@
-import { all, call, put, throttle, fork } from 'redux-saga/effects';
+import { all, call, put, throttle, takeLatest, fork } from 'redux-saga/effects';
 import axios from 'axios';
 
 import * as bookActions from '../reducers/book';
@@ -23,7 +23,7 @@ function* searchBooks(action) {
 }
 
 function* watchSearchBooks() {
-  yield throttle(2000, bookActions.SEARCH_BOOK_REQUEST, searchBooks);
+  yield takeLatest(bookActions.SEARCH_BOOK_REQUEST, searchBooks);
 }
 
 export default function* bookSaga() {
