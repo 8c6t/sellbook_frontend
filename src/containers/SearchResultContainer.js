@@ -1,36 +1,16 @@
-import React, {
-  useCallback,
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-} from 'react';
-import { Button } from 'react-bootstrap';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { search } from '../reducers/book';
 
-import styled from 'styled-components';
-import BookList from '../components/book/BookList';
-import SearchAgain from '../components/search/SearchAgain';
+import SearchResult from '../components/search/SearchResult';
 
-import * as bookActions from '../reducers/book';
-import { SEARCH_BOOK_REQUEST } from '../reducers/book';
-
-const Wrapper = styled.div`
-  margin-top: 1.5rem;
-`;
-
-const SelectedAction = styled.div`
-  justify-content: flex-end;
-  display: flex;
-  margin-top: 1rem;
-`;
-
-const SearchResult = ({ query: word, page = 0 }) => {
+const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [query, setQuery] = useState(word);
+  const [query, setQuery] = useState(firstQuery);
+
   const { bookList, totalCount, isLoading } = useSelector(
     (state) => state.book
   );
@@ -45,13 +25,12 @@ const SearchResult = ({ query: word, page = 0 }) => {
         document.documentElement.scrollHeight - 100 &&
       Math.ceil(totalCount / 10) > currentPage + 1
     ) {
-      dispatch({
-        type: SEARCH_BOOK_REQUEST,
-        data: {
+      dispatch(
+        search({
           query,
           page: currentPage + 1,
-        },
-      });
+        })
+      );
     }
   };
 
@@ -63,15 +42,14 @@ const SearchResult = ({ query: word, page = 0 }) => {
   }, [bookList.length]);
 
   useEffect(() => {
-    dispatch({
-      type: bookActions.SEARCH_BOOK_REQUEST,
-      data: {
-        query,
+    dispatch(
+      search({
+        query: firstQuery,
         page,
         isFirst: true,
-      },
-    });
-  }, [word]);
+      })
+    );
+  }, [firstQuery, page, dispatch]);
 
   const onChangeQuery = useCallback((e) => {
     setQuery(e.target.value);
@@ -82,34 +60,26 @@ const SearchResult = ({ query: word, page = 0 }) => {
       e.preventDefault();
       history.push(`/search/${query}`);
     },
-    [query]
+    [query, history]
   );
 
   return (
-    <Wrapper>
+    <>
       {isLoading ? (
         <div>로딩중</div>
       ) : (
         <>
-          <div>
-            <h2>{word} 검색 결과</h2>
-            <p>총 {totalCount} 개의 책이 검색되었습니다</p>
-          </div>
-          <SearchAgain
+          <SearchResult
             query={query}
+            totalCount={totalCount}
             onChangeQuery={onChangeQuery}
             onSubmit={onSubmit}
+            bookList={bookList}
           />
-          <SelectedAction>
-            <Button variant="success" size="sm">
-              선택한 책들 보관
-            </Button>
-          </SelectedAction>
-          <BookList books={bookList} />
         </>
       )}
-    </Wrapper>
+    </>
   );
 };
 
-export default SearchResult;
+export default React.memo(SearchResultContainer);

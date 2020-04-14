@@ -1,31 +1,11 @@
-import { all, call, put, throttle, takeLatest, fork } from 'redux-saga/effects';
-import axios from 'axios';
+import { takeLatest } from 'redux-saga/effects';
+import createRequestSaga from '../lib/createRequestSaga';
+import { SEARCH } from '../reducers/book';
 
-import * as bookActions from '../reducers/book';
+import * as searchAPI from '../lib/api/search';
 
-function searchBookAPI({ query, page = 0 }) {
-  return axios.get(`/v1/search/${query}?page=${page}`);
-}
-
-function* searchBooks(action) {
-  try {
-    const result = yield call(searchBookAPI, action.data);
-    yield put({
-      type: bookActions.SEARCH_BOOK_SUCCESS,
-      data: result.data,
-    });
-  } catch (error) {
-    yield put({
-      type: bookActions.SEARCH_BOOK_FAILURE,
-      error,
-    });
-  }
-}
-
-function* watchSearchBooks() {
-  yield takeLatest(bookActions.SEARCH_BOOK_REQUEST, searchBooks);
-}
+const searchSaga = createRequestSaga(SEARCH, searchAPI.search);
 
 export default function* bookSaga() {
-  yield all([fork(watchSearchBooks)]);
+  yield takeLatest(SEARCH, searchSaga);
 }
