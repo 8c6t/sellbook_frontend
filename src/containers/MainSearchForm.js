@@ -36,7 +36,7 @@ const MainSearchForm = () => {
       e.preventDefault();
       history.push(`/search/${query}`);
     },
-    [query]
+    [query, history]
   );
 
   return (

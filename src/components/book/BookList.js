@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Table } from 'react-bootstrap';
 import styled from 'styled-components';
 
@@ -39,4 +39,4 @@ const BookList = ({ books }) => {
   );
 };
 
-export default BookList;
+export default React.memo(BookList);

@@ -1,46 +1,48 @@
-import produce from 'immer';
+import { createAction, handleActions } from 'redux-actions';
+import { createRequestActionTypes } from '../lib/createRequestSaga';
 
-export const initialState = {
+export const [
+  SEARCH,
+  SEARCH_SUCCESS,
+  SEARCH_FAILURE,
+] = createRequestActionTypes('book/SEARCH');
+
+export const search = createAction(SEARCH, ({ query, page, isFirst }) => ({
+  query,
+  page,
+  isFirst,
+}));
+
+const initialState = {
   bookList: [],
   totalCount: 0,
   isLoading: false,
-  searchErrorReason: '',
+  searchError: null,
 };
 
-export const SEARCH_BOOK_REQUEST = 'book/SEARCH_BOOK_REQUEST';
-export const SEARCH_BOOK_SUCCESS = 'book/SEARCH_BOOK_SUCCESS';
-export const SEARCH_BOOK_FAILURE = 'book/SEARCH_BOOK_FAILURE';
+const book = handleActions(
+  {
+    [SEARCH]: (state, { payload: { isFirst } }) => ({
+      ...state,
+      isLoading: isFirst,
+      bookList: isFirst ? [] : state.bookList,
+      searchError: null,
+    }),
+    [SEARCH_SUCCESS]: (state, { payload: { content, totalElements } }) => ({
+      ...state,
+      bookList: state.bookList.concat(content),
+      totalCount: totalElements,
+      isLoading: false,
+      searchError: null,
+    }),
+    [SEARCH_FAILURE]: (state, { payload: { error } }) => ({
+      ...state,
+      bookList: [],
+      isLoading: false,
+      searchError: error,
+    }),
+  },
+  initialState
+);
 
-const reducer = (state = initialState, action) => {
-  return produce(state, (draft) => {
-    switch (action.type) {
-      case SEARCH_BOOK_REQUEST: {
-        if (action.data.isFirst) {
-          draft.isLoading = true;
-          draft.bookList = [];
-        }
-        draft.searchErrorReason = '';
-        break;
-      }
-      case SEARCH_BOOK_SUCCESS: {
-        const { content, totalElements } = action.data;
-        draft.bookList = draft.bookList.concat(content);
-        draft.totalCount = totalElements;
-        draft.isLoading = false;
-        break;
-      }
-      case SEARCH_BOOK_FAILURE: {
-        draft.searchErrorReason = action.error;
-        draft.bookList = [];
-        draft.totalCount = 0;
-        draft.isLoading = false;
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-  });
-};
-
-export default reducer;
+export default book;
