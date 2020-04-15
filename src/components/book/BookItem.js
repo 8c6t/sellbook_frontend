@@ -49,7 +49,7 @@ const Book = styled.tr`
   }
 `;
 
-const BookItem = ({ book, onCheck }) => {
+const BookItem = ({ type, book, onCheck, addStorageOne }) => {
   const {
     id,
     isbn,
@@ -90,14 +90,16 @@ const BookItem = ({ book, onCheck }) => {
       </td>
       <SecondPrice site={aladin} />
       <SecondPrice site={yes24} />
-      {/* TODO 호출 경로에 따라 다른 컴포넌트 렌더링 */}
       <td className="btnArea">
-        <Button variant="success" size="sm">
-          보관
-        </Button>
-        <Button variant="danger" size="sm">
-          삭제
-        </Button>
+        {type === 'search' ? (
+          <Button variant="success" size="sm" onClick={addStorageOne(id)}>
+            보관
+          </Button>
+        ) : (
+          <Button variant="danger" size="sm">
+            삭제
+          </Button>
+        )}
       </td>
     </Book>
   );
