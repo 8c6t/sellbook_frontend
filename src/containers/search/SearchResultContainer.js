@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { checkAll, checkOne, search } from '../../reducers/book';
+import { checkAll, checkOne, searchBook } from '../../reducers/search';
 
 import SearchResult from '../../components/search/SearchResult';
 import SearchAgain from '../../components/search/SearchAgain';
@@ -19,7 +19,7 @@ const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
   const [query, setQuery] = useState(firstQuery);
 
   const { bookList, totalCount, isLoading } = useSelector(
-    (state) => state.book
+    (state) => state.search
   );
 
   const currentPage = useMemo(() => {
@@ -56,7 +56,7 @@ const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
       Math.ceil(totalCount / 10) > currentPage + 1
     ) {
       dispatch(
-        search({
+        searchBook({
           query,
           page: currentPage + 1,
         })
@@ -73,7 +73,7 @@ const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
 
   useEffect(() => {
     dispatch(
-      search({
+      searchBook({
         query: firstQuery,
         page,
         isFirst: true,
