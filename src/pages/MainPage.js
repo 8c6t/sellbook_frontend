@@ -1,5 +1,5 @@
 import React from 'react';
-import MainSearchForm from '../containers/MainSearchForm';
+import MainSearchForm from '../containers/main/MainSearchForm';
 
 const MainPage = () => {
   return <MainSearchForm />;

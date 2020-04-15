@@ -1,6 +1,6 @@
 import React from 'react';
 import qs from 'qs';
-import SearchResultContainer from '../containers/SearchResultContainer';
+import SearchResultContainer from '../containers/search/SearchResultContainer';
 
 const SearchPage = ({ match, location }) => {
   const { query } = match.params;
