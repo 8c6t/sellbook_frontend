@@ -49,7 +49,7 @@ const Book = styled.tr`
   }
 `;
 
-const BookItem = ({ type, book, onCheck, addStorageOne }) => {
+const BookItem = ({ type, book, onCheck, onClickBtn }) => {
   const {
     id,
     isbn,
@@ -92,11 +92,11 @@ const BookItem = ({ type, book, onCheck, addStorageOne }) => {
       <SecondPrice site={yes24} />
       <td className="btnArea">
         {type === 'search' ? (
-          <Button variant="success" size="sm" onClick={addStorageOne(id)}>
+          <Button variant="success" size="sm" onClick={onClickBtn(id)}>
             보관
           </Button>
         ) : (
-          <Button variant="danger" size="sm">
+          <Button variant="danger" size="sm" onClick={onClickBtn(id)}>
             삭제
           </Button>
         )}

@@ -14,7 +14,7 @@ const BookListTable = styled(Table)`
   }
 `;
 
-const BookList = ({ type, books, onCheck, onCheckAll, addStorageOne }) => {
+const BookList = ({ type, books, onCheck, onCheckAll, onClickBtn }) => {
   return (
     <BookListTable bordered>
       <thead>
@@ -36,7 +36,7 @@ const BookList = ({ type, books, onCheck, onCheckAll, addStorageOne }) => {
             book={v}
             key={i}
             onCheck={onCheck}
-            addStorageOne={addStorageOne}
+            onClickBtn={onClickBtn}
             type={type}
           />
         ))}

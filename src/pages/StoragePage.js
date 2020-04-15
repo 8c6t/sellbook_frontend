@@ -1,7 +1,8 @@
 import React from 'react';
+import StorageContainer from '../containers/storage/StorageContainer';
 
 const StoragePage = () => {
-  return <div>보관함 페이지</div>;
+  return <StorageContainer />;
 };
 
 export default StoragePage;

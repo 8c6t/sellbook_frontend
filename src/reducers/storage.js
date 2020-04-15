@@ -1,5 +1,12 @@
 import { createAction, handleActions } from 'redux-actions';
 import { createRequestActionTypes } from '../lib/createRequestSaga';
+import produce from 'immer';
+
+export const [
+  LOAD_STORAGE,
+  LOAD_STORAGE_SUCCESS,
+  LOAD_STORAGE_FAILURE,
+] = createRequestActionTypes('storage/LOAD_STORAGE');
 
 export const [
   ADD_STORAGE,
@@ -13,8 +20,17 @@ export const [
   DELETE_BOOK_FAILURE,
 ] = createRequestActionTypes('storage/DELETE_BOOK');
 
+export const CHECK_ONE = 'storage/CHECK_ONE';
+export const CHECK_ALL = 'storage/CHECK_ALL';
+
+export const loadStorage = createAction(LOAD_STORAGE, ({ isFirst, page }) => ({
+  isFirst,
+  page,
+}));
 export const addStorage = createAction(ADD_STORAGE, (bookIds) => bookIds);
 export const deleteBook = createAction(DELETE_BOOK, (bookIds) => bookIds);
+export const checkOne = createAction(CHECK_ONE, (id) => ({ id }));
+export const checkAll = createAction(CHECK_ALL, (checked) => ({ checked }));
 
 const initialState = {
   bookList: [],
@@ -25,6 +41,32 @@ const initialState = {
 
 const storage = handleActions(
   {
+    [LOAD_STORAGE]: (state, { payload: { isFirst } }) => ({
+      ...state,
+      isLoading: isFirst,
+      bookList: isFirst
+        ? []
+        : state.bookList.map((e) => ({ ...e, checked: false })),
+      storageError: null,
+    }),
+    [LOAD_STORAGE_SUCCESS]: (
+      state,
+      { payload: { content, totalElements } }
+    ) => ({
+      ...state,
+      bookList: state.bookList.concat(
+        content.map((e) => ({ ...e, checked: false }))
+      ),
+      totalCount: totalElements,
+      isLoading: false,
+      storageError: null,
+    }),
+    [LOAD_STORAGE_FAILURE]: (state, { payload: { error } }) => ({
+      ...state,
+      bookList: [],
+      isLoading: false,
+      storageError: error,
+    }),
     [ADD_STORAGE_SUCCESS]: (state, payload) => ({
       ...state,
       storageError: null,
@@ -33,6 +75,15 @@ const storage = handleActions(
       ...state,
       storageError: error,
     }),
+    [CHECK_ONE]: (state, { payload: { id } }) =>
+      produce(state, (draft) => {
+        const index = draft.bookList.findIndex((e) => e.id === id);
+        draft.bookList[index].checked = !draft.bookList[index].checked;
+      }),
+    [CHECK_ALL]: (state, { payload: { checked } }) =>
+      produce(state, (draft) => {
+        draft.bookList.forEach((e) => (e.checked = checked));
+      }),
   },
   initialState
 );

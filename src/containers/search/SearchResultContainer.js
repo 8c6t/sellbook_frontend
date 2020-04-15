@@ -124,7 +124,7 @@ const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
             bookList={bookList}
             onCheck={onCheck}
             onCheckAll={onCheckAll}
-            addStorageOne={addStorageOne}
+            onClickBtn={addStorageOne}
             addStorageAll={addStorageAll}
           />
         </>

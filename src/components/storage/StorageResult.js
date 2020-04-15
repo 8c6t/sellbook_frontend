@@ -10,22 +10,22 @@ const ButtonWrapper = styled.div`
   margin-top: 1rem;
 `;
 
-const SearchResult = ({
+const StorageResult = ({
   bookList,
   onCheck,
   onCheckAll,
   onClickBtn,
-  addStorageAll,
+  deleteStorageAll,
 }) => {
   return (
     <>
       <ButtonWrapper>
-        <Button variant="success" size="sm" onClick={addStorageAll}>
-          선택한 책들 보관
+        <Button variant="danger" size="sm" onClick={deleteStorageAll}>
+          선택한 책들 삭제
         </Button>
       </ButtonWrapper>
       <BookList
-        type="search"
+        type="storage"
         books={bookList}
         onCheck={onCheck}
         onCheckAll={onCheckAll}
@@ -35,4 +35,4 @@ const SearchResult = ({
   );
 };
 
-export default React.memo(SearchResult);
+export default React.memo(StorageResult);
