@@ -21,4 +21,4 @@ const SecondPrice = ({ site }) => {
   );
 };
 
-export default SecondPrice;
+export default React.memo(SecondPrice);

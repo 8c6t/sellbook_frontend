@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { search } from '../../reducers/book';
+import { checkAll, checkOne, search } from '../../reducers/book';
 
 import SearchResult from '../../components/search/SearchResult';
 import SearchAgain from '../../components/search/SearchAgain';
@@ -37,6 +37,17 @@ const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
     },
     [query, history]
   );
+
+  const onCheck = useCallback(
+    (id) => () => {
+      dispatch(checkOne(id));
+    },
+    []
+  );
+
+  const onCheckAll = useCallback((e) => {
+    dispatch(checkAll(e.target.checked));
+  }, []);
 
   const onScroll = () => {
     if (
@@ -82,7 +93,11 @@ const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
             onChangeQuery={onChangeQuery}
             onSubmit={onSubmit}
           />
-          <SearchResult bookList={bookList} />
+          <SearchResult
+            bookList={bookList}
+            onCheck={onCheck}
+            onCheckAll={onCheckAll}
+          />
         </>
       )}
     </Wrapper>

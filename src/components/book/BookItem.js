@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button, Image } from 'react-bootstrap';
+
 import SecondPrice from './SecondPrice';
 
 const Book = styled.tr`
@@ -48,15 +49,25 @@ const Book = styled.tr`
   }
 `;
 
-const BookItem = ({ book }) => {
-  const { isbn, title, author, publisher, image, price, secondPrices } = book;
+const BookItem = ({ book, onCheck }) => {
+  const {
+    id,
+    isbn,
+    title,
+    author,
+    publisher,
+    image,
+    price,
+    secondPrices,
+    checked,
+  } = book;
   const aladin = secondPrices.find((e) => e.site === 'ALADIN');
   const yes24 = secondPrices.find((e) => e.site === 'YES24');
 
   return (
     <Book>
       <td className="check">
-        <input type="checkbox" />
+        <input type="checkbox" checked={checked} onChange={onCheck(id)} />
       </td>
       <td className="img">
         <Image
