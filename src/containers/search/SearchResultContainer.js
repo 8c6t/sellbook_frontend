@@ -1,9 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { search } from '../reducers/book';
+import { search } from '../../reducers/book';
 
-import SearchResult from '../components/search/SearchResult';
+import SearchResult from '../../components/search/SearchResult';
+import SearchAgain from '../../components/search/SearchAgain';
+import SearchResultSummary from '../../components/search/SearchResultSummary';
+import styled from 'styled-components';
+
+const Wrapper = styled.div`
+  margin-top: 1.5rem;
+`;
 
 const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
   const dispatch = useDispatch();
@@ -18,6 +25,18 @@ const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
   const currentPage = useMemo(() => {
     return Math.ceil(bookList.length / 10) - 1;
   }, [bookList.length]);
+
+  const onChangeQuery = useCallback((e) => {
+    setQuery(e.target.value);
+  }, []);
+
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      history.push(`/search/${query}`);
+    },
+    [query, history]
+  );
 
   const onScroll = () => {
     if (
@@ -51,34 +70,22 @@ const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
     );
   }, [firstQuery, page, dispatch]);
 
-  const onChangeQuery = useCallback((e) => {
-    setQuery(e.target.value);
-  }, []);
-
-  const onSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      history.push(`/search/${query}`);
-    },
-    [query, history]
-  );
-
   return (
-    <>
+    <Wrapper>
       {isLoading ? (
         <div>로딩중</div>
       ) : (
         <>
-          <SearchResult
+          <SearchResultSummary word={firstQuery} totalCount={totalCount} />
+          <SearchAgain
             query={query}
-            totalCount={totalCount}
             onChangeQuery={onChangeQuery}
             onSubmit={onSubmit}
-            bookList={bookList}
           />
+          <SearchResult bookList={bookList} />
         </>
       )}
-    </>
+    </Wrapper>
   );
 };
 
