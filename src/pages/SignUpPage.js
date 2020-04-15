@@ -1,7 +1,12 @@
 import React from 'react';
+import SignUpForm from '../containers/auth/SignUpForm';
 
 const SignUpPage = () => {
-  return <div>회원가입 페이지</div>;
+  return (
+    <>
+      <SignUpForm />
+    </>
+  );
 };
 
 export default SignUpPage;
