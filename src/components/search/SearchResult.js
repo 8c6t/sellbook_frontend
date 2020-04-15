@@ -10,7 +10,7 @@ const ButtonWrapper = styled.div`
   margin-top: 1rem;
 `;
 
-const SearchResult = ({ bookList }) => {
+const SearchResult = ({ bookList, onCheck, onCheckAll }) => {
   return (
     <>
       <ButtonWrapper>
@@ -18,7 +18,7 @@ const SearchResult = ({ bookList }) => {
           선택한 책들 보관
         </Button>
       </ButtonWrapper>
-      <BookList books={bookList} />
+      <BookList books={bookList} onCheck={onCheck} onCheckAll={onCheckAll} />
     </>
   );
 };

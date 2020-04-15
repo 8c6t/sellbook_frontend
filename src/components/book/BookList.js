@@ -14,13 +14,13 @@ const BookListTable = styled(Table)`
   }
 `;
 
-const BookList = ({ books }) => {
+const BookList = ({ books, onCheck, onCheckAll }) => {
   return (
     <BookListTable bordered>
       <thead>
         <tr>
           <th>
-            <input type="checkbox" />
+            <input type="checkbox" onChange={onCheckAll} />
           </th>
           <th colSpan="2">상품정보</th>
           <th>정가</th>
@@ -32,7 +32,7 @@ const BookList = ({ books }) => {
       </thead>
       <tbody>
         {books.map((v, i) => (
-          <BookItem book={v} key={i} />
+          <BookItem book={v} key={i} onCheck={onCheck} />
         ))}
       </tbody>
     </BookListTable>
