@@ -14,13 +14,28 @@ import rootReducer from './reducers';
 
 import * as serviceWorker from './serviceWorker';
 import rootSaga from './sagas';
+import { tempSetUser, check } from './reducers/user';
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
+
+function loadUser() {
+  try {
+    const user = localStorage.getItem('user');
+    if (!user) return;
+
+    store.dispatch(tempSetUser(user));
+    store.dispatch(check());
+  } catch (e) {
+    console.log('localStorage is not working');
+  }
+}
+
 sagaMiddleware.run(rootSaga);
+loadUser();
 
 ReactDOM.render(
   <React.StrictMode>

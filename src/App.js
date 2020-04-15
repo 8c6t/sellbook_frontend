@@ -9,7 +9,7 @@ import SignUpPage from './pages/SignUpPage';
 import SearchPage from './pages/SearchPage';
 import StoragePage from './pages/StoragePage';
 
-import Header from './components/Header';
+import HeaderContainer from './containers/common/HeaderContainer';
 
 const AppContainer = styled.div`
   height: 100vh;
@@ -18,7 +18,7 @@ const AppContainer = styled.div`
 function App() {
   return (
     <AppContainer>
-      <Header />
+      <HeaderContainer />
       <Container>
         <Switch>
           <Route exact path="/" component={MainPage} />
