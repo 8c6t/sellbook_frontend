@@ -18,4 +18,4 @@ const SearchAgain = ({ query, onChangeQuery, onSubmit }) => {
   );
 };
 
-export default SearchAgain;
+export default React.memo(SearchAgain);
