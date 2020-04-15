@@ -1,25 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  Button,
-  Col,
-  Form,
-  FormControl,
-  Jumbotron,
-  Row,
-} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Button, Form, FormControl } from 'react-bootstrap';
+import CenterJumbotron from '../common/CenterJumbotron';
 
-const Wrapper = styled(Row)`
-  height: 90vh;
-`;
-
-const SignInHeader = styled.h2`
-  text-align: center;
-  margin-bottom: 3rem;
-`;
-
-const Input = styled(FormControl)`
+const StyledInput = styled(FormControl)`
   margin-bottom: 1rem;
 `;
 
@@ -38,31 +22,26 @@ const SignIn = ({
   error,
 }) => {
   return (
-    <Wrapper>
-      <Col md={{ span: 6, offset: 3 }} className="my-auto">
-        <Jumbotron>
-          <SignInHeader>로그인</SignInHeader>
-          <Form onSubmit={onSubmit}>
-            <Input
-              type="text"
-              value={username}
-              onChange={onChangeUsername}
-              placeholder="Email 혹은 닉네임"
-            />
-            <Input
-              type="password"
-              value={password}
-              onChange={onChangePassword}
-              placeholder="비밀번호"
-            />
-            {error && <ErrorMsg>{error}</ErrorMsg>}
-            <Button type="submit" variant="primary" block>
-              로그인
-            </Button>
-          </Form>
-        </Jumbotron>
-      </Col>
-    </Wrapper>
+    <CenterJumbotron title="로그인">
+      <Form onSubmit={onSubmit}>
+        <StyledInput
+          type="text"
+          value={username}
+          onChange={onChangeUsername}
+          placeholder="이메일 혹은 닉네임"
+        />
+        <StyledInput
+          type="password"
+          value={password}
+          onChange={onChangePassword}
+          placeholder="비밀번호"
+        />
+        {error && <ErrorMsg>{error}</ErrorMsg>}
+        <Button type="submit" variant="primary" block>
+          로그인
+        </Button>
+      </Form>
+    </CenterJumbotron>
   );
 };
 
