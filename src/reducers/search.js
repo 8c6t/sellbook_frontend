@@ -3,19 +3,22 @@ import { createAction, handleActions } from 'redux-actions';
 import { createRequestActionTypes } from '../lib/createRequestSaga';
 
 export const [
-  SEARCH,
-  SEARCH_SUCCESS,
-  SEARCH_FAILURE,
-] = createRequestActionTypes('book/SEARCH');
+  SEARCH_BOOK,
+  SEARCH_BOOK_SUCCESS,
+  SEARCH_BOOK_FAILURE,
+] = createRequestActionTypes('search/SEARCH_BOOK');
 
-export const CHECK_ONE = 'book/CHECK_ONE';
-export const CHECK_ALL = 'book/CHECK_ALL';
+export const CHECK_ONE = 'search/CHECK_ONE';
+export const CHECK_ALL = 'search/CHECK_ALL';
 
-export const search = createAction(SEARCH, ({ query, page, isFirst }) => ({
-  query,
-  page,
-  isFirst,
-}));
+export const searchBook = createAction(
+  SEARCH_BOOK,
+  ({ query, page, isFirst }) => ({
+    query,
+    page,
+    isFirst,
+  })
+);
 
 export const checkOne = createAction(CHECK_ONE, (id) => ({ id }));
 export const checkAll = createAction(CHECK_ALL, (checked) => ({ checked }));
@@ -27,9 +30,9 @@ const initialState = {
   searchError: null,
 };
 
-const book = handleActions(
+const search = handleActions(
   {
-    [SEARCH]: (state, { payload: { isFirst } }) => ({
+    [SEARCH_BOOK]: (state, { payload: { isFirst } }) => ({
       ...state,
       isLoading: isFirst,
       bookList: isFirst
@@ -37,7 +40,10 @@ const book = handleActions(
         : state.bookList.map((e) => ({ ...e, checked: false })),
       searchError: null,
     }),
-    [SEARCH_SUCCESS]: (state, { payload: { content, totalElements } }) => ({
+    [SEARCH_BOOK_SUCCESS]: (
+      state,
+      { payload: { content, totalElements } }
+    ) => ({
       ...state,
       bookList: state.bookList.concat(
         content.map((e) => ({ ...e, checked: false }))
@@ -46,7 +52,7 @@ const book = handleActions(
       isLoading: false,
       searchError: null,
     }),
-    [SEARCH_FAILURE]: (state, { payload: { error } }) => ({
+    [SEARCH_BOOK_FAILURE]: (state, { payload: { error } }) => ({
       ...state,
       bookList: [],
       isLoading: false,
@@ -65,4 +71,4 @@ const book = handleActions(
   initialState
 );
 
-export default book;
+export default search;
