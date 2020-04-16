@@ -11,4 +11,5 @@ const deleteBookSaga = createRequestSaga(DELETE_BOOK, storageAPI.deleteBook);
 export default function* storageSaga() {
   yield takeLatest(LOAD_STORAGE, loadStorageSaga);
   yield takeLatest(ADD_STORAGE, addStorageSaga);
+  yield takeLatest(DELETE_BOOK, deleteBookSaga);
 }

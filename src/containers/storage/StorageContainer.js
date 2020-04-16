@@ -20,11 +20,12 @@ const StorageContainer = ({ page = 0 }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const { bookList, totalCount, isLoading, user } = useSelector(
+  const { bookList, totalCount, isLoading, deleteSuccess, user } = useSelector(
     ({ storage, user }) => ({
       bookList: storage.bookList,
       totalCount: storage.totalCount,
       isLoading: storage.isLoading,
+      deleteSuccess: storage.deleteSuccess,
       user: user.user,
     })
   );
@@ -62,7 +63,7 @@ const StorageContainer = ({ page = 0 }) => {
     (id) => () => {
       dispatch(deleteBook([id]));
     },
-    [user]
+    []
   );
 
   const deleteStorageAll = useCallback(() => {
@@ -82,13 +83,15 @@ const StorageContainer = ({ page = 0 }) => {
   }, [bookList.length]);
 
   useEffect(() => {
-    dispatch(
-      loadStorage({
-        page,
-        isFirst: true,
-      })
-    );
+    dispatch(loadStorage({ isFirst: true }));
   }, [page === 0]);
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      alert('책을 보관함에서 삭제했습니다');
+      dispatch(loadStorage({ isFirst: true }));
+    }
+  }, [deleteSuccess]);
 
   useEffect(() => {
     if (!user) {
