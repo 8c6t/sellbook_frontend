@@ -13,7 +13,9 @@ const Header = ({ user, onLogout }) => {
         <Nav>
           {user ? (
             <>
-              <Nav.Link disabled>{user.nickname} 님</Nav.Link>
+              <Nav.Link as={Link} to="/storage">
+                {user.nickname} 님
+              </Nav.Link>
               <Button variant="dark" size="sm" onClick={onLogout}>
                 로그아웃
               </Button>
