@@ -14,7 +14,7 @@ const BookListTable = styled(Table)`
   }
 `;
 
-const BookList = ({ books, onCheck, onCheckAll }) => {
+const BookList = ({ type, books, onCheck, onCheckAll, onClickBtn }) => {
   return (
     <BookListTable bordered>
       <thead>
@@ -27,12 +27,18 @@ const BookList = ({ books, onCheck, onCheckAll }) => {
           <th>상태</th>
           <th>알라딘</th>
           <th>YES24</th>
-          <th>장바구니</th>
+          <th>보관함</th>
         </tr>
       </thead>
       <tbody>
         {books.map((v, i) => (
-          <BookItem book={v} key={i} onCheck={onCheck} />
+          <BookItem
+            book={v}
+            key={i}
+            onCheck={onCheck}
+            onClickBtn={onClickBtn}
+            type={type}
+          />
         ))}
       </tbody>
     </BookListTable>

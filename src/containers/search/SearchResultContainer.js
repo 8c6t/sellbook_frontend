@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
+
 import { checkAll, checkOne, searchBook } from '../../reducers/search';
+import { addStorage } from '../../reducers/storage';
 
 import SearchResult from '../../components/search/SearchResult';
 import SearchAgain from '../../components/search/SearchAgain';
 import SearchResultSummary from '../../components/search/SearchResultSummary';
-import styled from 'styled-components';
 
 const Wrapper = styled.div`
   margin-top: 1.5rem;
@@ -18,8 +20,13 @@ const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
 
   const [query, setQuery] = useState(firstQuery);
 
-  const { bookList, totalCount, isLoading } = useSelector(
-    (state) => state.search
+  const { bookList, totalCount, isLoading, user } = useSelector(
+    ({ search, user }) => ({
+      bookList: search.bookList,
+      totalCount: search.totalCount,
+      isLoading: search.isLoading,
+      user: user.user,
+    })
   );
 
   const currentPage = useMemo(() => {
@@ -48,6 +55,26 @@ const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
   const onCheckAll = useCallback((e) => {
     dispatch(checkAll(e.target.checked));
   }, []);
+
+  const addStorageOne = useCallback(
+    (id) => () => {
+      if (!user) {
+        alert('로그인이 필요합니다');
+        history.push('/sign-in');
+      }
+      dispatch(addStorage([id]));
+    },
+    [user]
+  );
+
+  const addStorageAll = useCallback(() => {
+    const checkedBookIds = bookList.filter((e) => e.checked).map((e) => e.id);
+    if (!checkedBookIds.length) {
+      alert('책을 선택해주세요');
+      return;
+    }
+    dispatch(addStorage(checkedBookIds));
+  }, [bookList]);
 
   const onScroll = () => {
     if (
@@ -97,6 +124,8 @@ const SearchResultContainer = ({ query: firstQuery, page = 0 }) => {
             bookList={bookList}
             onCheck={onCheck}
             onCheckAll={onCheckAll}
+            onClickBtn={addStorageOne}
+            addStorageAll={addStorageAll}
           />
         </>
       )}
