@@ -19,7 +19,9 @@ import { tempSetUser, check } from './reducers/user';
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
   rootReducer,
-  composeWithDevTools(applyMiddleware(sagaMiddleware))
+  process.env.NODE_ENV === 'production'
+    ? applyMiddleware(sagaMiddleware)
+    : composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
 
 function loadUser() {
