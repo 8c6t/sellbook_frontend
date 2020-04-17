@@ -1,0 +1,51 @@
+language: node_js
+node_js:
+  - 12.16.1
+
+branches:
+  only:
+    - master
+
+cache:
+  directories:
+    - node_modules
+
+script:
+  - npm i
+  - CI=false REACT_APP_API_URL=${REACT_APP_API_KEY} npm run build
+
+notifications:
+  email:
+    recipients:
+      - 'nkw8620@gmail.com'
+
+before_deploy:
+  - mkdir -p deploy before-deploy
+  - cp scripts/*.sh before-deploy/
+  - cp appspec.yml before-deploy/
+  - cd build && zip -r build *
+  - cd ../ && mv build/build.zip before-deploy/build.zip
+  - cd before-deploy && zip -r before-deploy *
+  - cd ../ && mv before-deploy/before-deploy.zip deploy/sellbook-frontend.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: sellbook-api-build
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private
+    local_dir: deploy
+    wait_until_deployed: true
+
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: sellbook-api-build
+    key: sellbook-frontend.zip
+    bundle_type: zip
+    application: sellbook-api
+    deployment_group: sellbook-frontend
+    region: ap-northeast-2
+    wait_until_deployed: true
